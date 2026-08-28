@@ -7,6 +7,14 @@ $error = '';
 $notice = '';
 $updatePlan = null;
 $updateResult = null;
+$returnFocus = '';
+$focusableSections = ['admin-libraries', 'admin-users', 'admin-create-user', 'admin-player-settings', 'admin-updates'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $requestedFocus = (string) ($_POST['return_focus'] ?? '');
+    if (in_array($requestedFocus, $focusableSections, true)) {
+        $returnFocus = $requestedFocus;
+    }
+}
 try {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         tt_require_csrf();

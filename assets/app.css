@@ -72,6 +72,15 @@ small {
     padding: 28px
 }
 
+.admin-grid .card {
+    scroll-margin-top: 20px
+}
+
+.admin-grid .card:focus {
+    outline: 2px solid color-mix(in srgb, var(--accent), transparent 30%);
+    outline-offset: 3px
+}
+
 .button {
     display: inline-flex;
     align-items: center;
