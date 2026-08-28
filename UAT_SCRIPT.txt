@@ -1,0 +1,26 @@
+Tea & Toast NAS Player 0.1.4 - Mobile UAT
+================================================
+
+Preparation
+-----------
+1. Back up the current player files.
+2. Replace the application files with the 0.1.4 package, preserving config/local.php and private data.
+3. Sign in on a phone or a browser using a viewport no wider than 760px.
+
+Test steps
+----------
+1. Scroll the library page and confirm the player does not cover the final content.
+2. Confirm there is visible space between the player and the browser/phone bottom edge.
+3. Tap the menu button. Confirm the drawer opens and the page behind it does not scroll.
+4. Tap the X. Confirm the drawer closes and the previous page scroll position is restored.
+5. Open the drawer and tap the shaded area outside it. Confirm the drawer closes.
+6. Open the drawer and use the phone/browser Back action. Confirm only the drawer closes.
+7. Use Back once more. Confirm normal browser navigation resumes.
+8. Open the drawer and select a library, Random Play, or Admin. Confirm the drawer closes.
+9. At a viewport wider than 760px, confirm the desktop sidebar and fixed player retain their previous layout.
+
+Completion criteria
+-------------------
+- All five mobile fixes work without changing desktop behaviour.
+- Music playback continues normally while opening and closing the drawer.
+- No colour or image feature is present in this release.
