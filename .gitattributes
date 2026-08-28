@@ -1,0 +1,4 @@
+CHANGELOG.txt export-ignore
+UAT_SCRIPT.txt export-ignore
+.github/ export-ignore
+tests/ export-ignore
