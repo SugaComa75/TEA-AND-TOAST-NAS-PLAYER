@@ -1,0 +1,8 @@
+Options -Indexes
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule ^(?:config|src|views|tests)(?:/|$) - [F,L,NC]
+</IfModule>
+<FilesMatch "^(?:\.gitignore|README\.md)$">
+Require all denied
+</FilesMatch>
