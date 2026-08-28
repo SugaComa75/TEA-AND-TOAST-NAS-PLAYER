@@ -1,0 +1,69 @@
+{
+    "schema": 1,
+    "version": "0.2.0",
+    "ref": "v0.2.0",
+    "repository": "SugaComa75/Tea-and-Toast-NAS-Player",
+    "generated_at": "2026-08-28T18:09:14+00:00",
+    "files": {
+        ".htaccess": {
+            "sha256": "72c15c03c6bcc8462fd36a881aad3b71542377c512c2597af6176fe8f3af340e",
+            "size": 206
+        },
+        "README.md": {
+            "sha256": "4970734542967a301e86cd8951abf5112d8942d160809618d145c95cd5f4b930",
+            "size": 2145
+        },
+        "assets/admin-modal.css": {
+            "sha256": "260dd80e6e441f6c617db8fcc7ecd2680aa878a7b1f6ce4814552e1e83980a26",
+            "size": 535
+        },
+        "assets/app.css": {
+            "sha256": "6cd376ee58bb1d15adadda9aeaf5a517e2a805a601caa11f6b4fb951d4461393",
+            "size": 15159
+        },
+        "assets/app.js": {
+            "sha256": "02a2850de4806aafc5c4d161cef7c1ac9afd0f63780146b33036ebb0ae65d409",
+            "size": 12176
+        },
+        "config/bootstrap.php": {
+            "sha256": "f0e829950134b0e7fa604373fd5ff67245520275e1c39d65d05cecc52ec8a43a",
+            "size": 809
+        },
+        "config/release.php": {
+            "sha256": "87c57ceca0b79f38410412ec18b7183405293d40fc61da56bd543785b5f8c4b0",
+            "size": 195
+        },
+        "index.php": {
+            "sha256": "ba2d6d5eca936842dfd8e77d4cf6abdeb9ebbb7ba50897e42a3acdf2d6f60d65",
+            "size": 3315
+        },
+        "src/admin.php": {
+            "sha256": "f3979c2e5e40a4a8fd4764c299097a8f605af8d7f965d0aa64d36d8597a945f7",
+            "size": 5962
+        },
+        "src/api.php": {
+            "sha256": "f884a901cc921ae947aec222a315e691d25121464608ce66bc3a0508c3be3807",
+            "size": 3530
+        },
+        "src/core.php": {
+            "sha256": "f9f8233196299746d38725599a5c280891ec7e276254cdbce143d258b2ebc498",
+            "size": 12478
+        },
+        "src/updater.php": {
+            "sha256": "b7b090131c51fd9c87d3852b219a75013a7bdbfaba7f6ad89e7b322784776951",
+            "size": 19820
+        },
+        "views/admin.php": {
+            "sha256": "293cc06b7e9d50d0125250f352a543b04a2bc501fff64c4e3bbca2fd5abfe009",
+            "size": 6940
+        },
+        "views/login.php": {
+            "sha256": "1ee2d872bb39c222096f151cc2f09aeb6e2f6029179aeebf6ce49aa566a5e58a",
+            "size": 1847
+        },
+        "views/player.php": {
+            "sha256": "c7a2c5f79c11f413059181ab3c54e966e8aabcf7b4bbbe75395f7a9b24eed19b",
+            "size": 3342
+        }
+    }
+}
