@@ -40,11 +40,9 @@ try {
 
         case 'artwork':
             $directory = tt_resolve_library_path($library['root_path'], $relativePath, true);
-            foreach (['cover.jpg', 'folder.jpg', 'front.jpg', 'cover.png', 'folder.png'] as $candidate) {
-                $file = $directory . DIRECTORY_SEPARATOR . $candidate;
-                if (is_file($file) && is_readable($file)) {
-                    tt_stream_file($file);
-                }
+            $artwork = tt_find_artwork($directory, (string) ($_GET['kind'] ?? 'album'));
+            if ($artwork !== null) {
+                tt_stream_file($artwork);
             }
             http_response_code(404);
             exit;

@@ -9,6 +9,8 @@ A small PHP music player that browses NAS folders directly. It deliberately does
 - Opens one directory at a time, so initial load does not scan the whole library.
 - Streams MP3, M4A, AAC, FLAC, WAV, OGG and Opus with HTTP range support.
 - Provides random play, per-user favourites, an optional registration page, and administrator-created accounts.
+- Uses local `artist.jpg` artwork for artist folders and `cover.jpg`, `folder.jpg`, or `front.jpg` artwork for albums when available. JPEG, PNG and WebP variants are supported without indexing.
+- Highlights the current track's play button with the configured theme colour.
 - Keeps its one SQLite file outside the web root. That database contains only users, settings, library paths and user features—not the music catalogue.
 - Checks published GitHub releases from the Admin panel and downloads only changed application files.
 - Protects locally modified files, private configuration and data during updates, with automatic backups and rollback.

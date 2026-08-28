@@ -139,6 +139,41 @@ function tt_is_audio_file(string $filename): bool
     return in_array(strtolower(pathinfo($filename, PATHINFO_EXTENSION)), TT_AUDIO_EXTENSIONS, true);
 }
 
+function tt_find_artwork(string $directory, string $kind = 'album'): ?string
+{
+    if (!is_dir($directory) || !is_readable($directory)) {
+        return null;
+    }
+    $artistNames = ['artist.jpg', 'artist.jpeg', 'artist.png', 'artist.webp'];
+    $albumNames = [
+        'cover.jpg', 'cover.jpeg', 'cover.png', 'cover.webp',
+        'folder.jpg', 'folder.jpeg', 'folder.png', 'folder.webp',
+        'front.jpg', 'front.jpeg', 'front.png', 'front.webp',
+    ];
+    $preferred = $kind === 'artist'
+        ? array_merge($artistNames, $albumNames)
+        : array_merge($albumNames, $artistNames);
+    $available = [];
+    try {
+        foreach (new DirectoryIterator($directory) as $item) {
+            if ($item->isFile() && $item->isReadable()) {
+                $name = strtolower($item->getFilename());
+                if (in_array($name, $preferred, true) && !isset($available[$name])) {
+                    $available[$name] = $item->getPathname();
+                }
+            }
+        }
+    } catch (UnexpectedValueException) {
+        return null;
+    }
+    foreach ($preferred as $name) {
+        if (isset($available[$name])) {
+            return $available[$name];
+        }
+    }
+    return null;
+}
+
 function tt_display_title(string $filename): string
 {
     $title = pathinfo($filename, PATHINFO_FILENAME);

@@ -41,8 +41,8 @@ try {
     ];
     $target = tt_update_validate_manifest([
         'schema' => 1,
-        'version' => '0.2.1',
-        'ref' => 'v0.2.1',
+        'version' => '0.3.0',
+        'ref' => 'v0.3.0',
         'repository' => 'owner/repository',
         'files' => [
             'safe.txt' => ['sha256' => hash('sha256', 'new-safe'), 'size' => 8],
@@ -51,7 +51,7 @@ try {
             'add.txt' => ['sha256' => hash('sha256', 'new-file'), 'size' => 8],
             'existing-new.txt' => ['sha256' => hash('sha256', 'upstream-file'), 'size' => 13],
         ],
-    ], 'owner/repository', 'v0.2.1');
+    ], 'owner/repository', 'v0.3.0');
 
     $comparison = tt_update_compare_files($appRoot, $state, $target);
     test_assert($comparison['counts']['safe'] === 3, 'Expected update, add and delete to be safe.');
@@ -83,7 +83,7 @@ try {
     test_assert($blocked, 'A manifest containing install.php must be rejected.');
     $installedState = tt_update_initialize_state(dirname(__DIR__), $dataRoot);
     $releaseManifest = tt_update_read_manifest_file(dirname(__DIR__) . '/release-manifest.json');
-    test_assert($installedState['version'] === '0.2.1', 'Installed version state was not initialized.');
+    test_assert($installedState['version'] === '0.3.0', 'Installed version state was not initialized.');
     test_assert($installedState['files'] === array_map(
         static fn(array $metadata): string => $metadata['sha256'],
         $releaseManifest['files']
