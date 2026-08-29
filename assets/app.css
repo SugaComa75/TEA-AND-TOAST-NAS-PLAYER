@@ -537,11 +537,19 @@ code {
     position: relative;
     display: grid;
     place-items: center;
+    flex: 0 0 58px;
     width: 58px;
     height: 58px;
+    aspect-ratio: 1 / 1;
     overflow: hidden;
     border-radius: 10px;
     background: linear-gradient(135deg, var(--accent), #222)
+}
+
+.now-playing>div:last-child {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden
 }
 
 .now-playing strong,
@@ -556,6 +564,29 @@ code {
     color: var(--muted);
     font-size: .8rem;
     margin-top: 4px
+}
+
+.now-playing .scroll-once {
+    overflow: visible;
+    text-overflow: clip;
+    animation: now-playing-scroll-once var(--scroll-duration, 5s) linear 1 1s forwards;
+    will-change: transform
+}
+
+@keyframes now-playing-scroll-once {
+    from {
+        transform: translateX(0)
+    }
+
+    to {
+        transform: translateX(calc(-1 * var(--scroll-distance, 0px)))
+    }
+}
+
+@media(prefers-reduced-motion:reduce) {
+    .now-playing .scroll-once {
+        animation: none
+    }
 }
 
 audio {
@@ -898,15 +929,28 @@ audio {
     }
 
     .mobile-menu {
-        display: block;
-        border: 0;
-        background: var(--panel);
-        border-radius: 10px;
-        padding: 10px
+        position: fixed;
+        z-index: 28;
+        top: max(12px, env(safe-area-inset-top));
+        left: 12px;
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        padding: 0;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: #101216e8;
+        box-shadow: 0 8px 24px #0008;
+        backdrop-filter: blur(14px)
     }
 
     .content {
         padding: 24px 18px calc(180px + env(safe-area-inset-bottom))
+    }
+
+    .content>header {
+        padding-left: 56px
     }
 
     .player-bar {
