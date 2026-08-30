@@ -956,7 +956,7 @@ audio {
     .player-bar {
         left: 10px;
         right: 10px;
-        bottom: calc(10px + env(safe-area-inset-bottom));
+        bottom: calc(-2px + env(safe-area-inset-bottom));
         width: auto;
         height: 140px;
         grid-template-columns: 1fr 40px;
@@ -968,7 +968,8 @@ audio {
 
     .player-bar audio {
         grid-column: 1/-1;
-        grid-row: 2
+        grid-row: 2;
+        padding-bottom: 20px
     }
 
     .admin-page {

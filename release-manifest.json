@@ -1,9 +1,9 @@
 {
     "schema": 1,
-    "version": "0.3.2",
-    "ref": "0.3.2",
+    "version": "0.3.2a",
+    "ref": "0.3.2a",
     "repository": "SugaComa75/Tea-and-Toast-NAS-Player",
-    "generated_at": "2026-08-30T09:20:03+00:00",
+    "generated_at": "2026-08-30T10:28:18+00:00",
     "files": {
         ".htaccess": {
             "sha256": "72c15c03c6bcc8462fd36a881aad3b71542377c512c2597af6176fe8f3af340e",
@@ -18,8 +18,8 @@
             "size": 535
         },
         "assets/app.css": {
-            "sha256": "15fedbce78054f9350e8e44ef180a607efec3f2172a789629cfb46ca51c41e3c",
-            "size": 16961
+            "sha256": "67e34724bce88bf9e478ca87613e1c20faca788e4d505a6006d84fde18fe2e79",
+            "size": 16991
         },
         "assets/app.js": {
             "sha256": "474adb12c4ee44782b581366e847329ba8eb3aa42ff8207e1755d5cb44cdd656",
@@ -30,8 +30,8 @@
             "size": 809
         },
         "config/release.php": {
-            "sha256": "df2ffd3f147f31f410739626e5cd54042a6d69be37b775ff82f1261e2c4cab6b",
-            "size": 196
+            "sha256": "ef2e66feac91e124c80260574ad0a8f3de4dc2b902558e70c8c88758b4579c6d",
+            "size": 197
         },
         "index.php": {
             "sha256": "360d0ddd1baf84b096c0f0b2c173892816f88cd34dfb1fce70aeda0706ff27a8",
