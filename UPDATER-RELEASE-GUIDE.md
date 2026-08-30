@@ -65,7 +65,7 @@ Then create a GitHub Release for the exact tag `v0.3.1` and make it the newest/l
 | GitHub Release tag | `v0.3.1` |
 | Raw manifest URL | `.../v0.3.1/release-manifest.json` |
 
-The tag is case-sensitive and the `v` prefix matters. Do not generate the manifest, then change the version or tag afterward.
+The tag is case-sensitive. The tag may include `v` or not, but the exact same string must be used in `config/release.php`, `release-manifest.json`, and GitHub. Do not generate the manifest, then change the version or tag afterward.
 
 ## Verify GitHub before testing the player
 
@@ -84,10 +84,11 @@ Expected output is `0.3.1`, `v0.3.1`, and `SugaComa75/Tea-and-Toast-NAS-Player`.
 
 ## Fix for the current error
 
-The installed app is configured for `v0.3.0`. If that GitHub release contains an old or mismatched manifest, do not overwrite the existing tag. Use a new patch release such as `v0.3.1`, regenerate the manifest, commit it, push the commit, create the matching tag, and publish that tag as the latest release.
+The installed app was built from the `0.3.0` release. If that GitHub release contains an old or mismatched manifest, do not overwrite the existing tag. Use a new patch release such as `0.3.2`, set both `version` and `ref` to that value, regenerate the manifest, commit it, push the commit, create the matching tag, and publish that tag as the latest release.
 
 Finally open **Admin → Application updates → Check for updates**. The updater will compare the installed state, show safe changes, back up affected files, and install verified files only.
 
 ## Keep private files private
 
 Keep `config/local.php`, the SQLite data directory, backups, update state, and secrets outside the managed release files. The updater protects local configuration and data from replacement.
+

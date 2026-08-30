@@ -83,7 +83,7 @@ try {
     test_assert($blocked, 'A manifest containing install.php must be rejected.');
     $installedState = tt_update_initialize_state(dirname(__DIR__), $dataRoot);
     $releaseManifest = tt_update_read_manifest_file(dirname(__DIR__) . '/release-manifest.json');
-    test_assert($installedState['version'] === '0.3.0', 'Installed version state was not initialized.');
+    test_assert($installedState['version'] === tt_update_release_config(dirname(__DIR__))['version'], 'Installed version state was not initialized.');
     test_assert($installedState['files'] === array_map(
         static fn(array $metadata): string => $metadata['sha256'],
         $releaseManifest['files']
@@ -92,3 +92,6 @@ try {
 } finally {
     tt_update_remove_tree($testRoot);
 }
+
+
+
