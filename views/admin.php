@@ -25,7 +25,7 @@
     </header>
     <main class="admin-grid">
         <?php if ($error): ?>
-            <div class="alert error wide"><?= tt_h($error) ?></div><?php endif; ?><?php if ($notice): ?>
+            <div class="alert error wide"><?= tt_h($error) ?></div><?php endif; ?><?php if ($notice && !$updateResult): ?>
             <div class="alert success wide"><?= tt_h($notice) ?></div><?php endif; ?>
         <section class="card wide" id="admin-libraries" tabindex="-1">
             <h2>Libraries</h2>
@@ -99,7 +99,9 @@
                         value="update_settings"><label>GitHub repository<input name="update_repository"
                             value="<?= tt_h($updateRepository) ?>" placeholder="owner/repository" required></label><button
                         class="button">Save repository</button></form>
-                <div class="update-actions">
+                <?php if ($updateResult && $notice): ?>
+                    <div class="alert success"><?= tt_h($notice) ?></div>
+                <?php endif; ?>                <div class="update-actions">
                     <form method="post"><input type="hidden" name="csrf" value="<?= tt_h(tt_csrf_token()) ?>"><input
                             type="hidden" name="action" value="check_update"><button class="button primary">Check for
                             updates</button></form>
@@ -139,4 +141,5 @@
 </body>
 
 </html>
+
 
