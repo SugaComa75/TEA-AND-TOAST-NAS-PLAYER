@@ -31,6 +31,9 @@ CREATE TABLE IF NOT EXISTS users (
     password_hash TEXT NOT NULL,
     role TEXT NOT NULL DEFAULT 'user' CHECK(role IN ('user','admin','super_admin')),
     active INTEGER NOT NULL DEFAULT 1,
+    must_change_password INTEGER NOT NULL DEFAULT 0,
+    auth_source TEXT NOT NULL DEFAULT 'local',
+    avatar_url TEXT NOT NULL DEFAULT '',
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 CREATE TABLE IF NOT EXISTS libraries (
@@ -70,6 +73,17 @@ CREATE TABLE IF NOT EXISTS playlist_tracks (
     FOREIGN KEY (library_id) REFERENCES libraries(id) ON DELETE CASCADE
 );
 SQL);
+    $columns = array_column($db->query('PRAGMA table_info(users)')->fetchAll(), 'name');
+    $migrations = [
+        'must_change_password' => 'ALTER TABLE users ADD COLUMN must_change_password INTEGER NOT NULL DEFAULT 0',
+        'auth_source' => "ALTER TABLE users ADD COLUMN auth_source TEXT NOT NULL DEFAULT 'local'",
+        'avatar_url' => "ALTER TABLE users ADD COLUMN avatar_url TEXT NOT NULL DEFAULT ''",
+    ];
+    foreach ($migrations as $column => $sql) {
+        if (!in_array($column, $columns, true)) {
+            $db->exec($sql);
+        }
+    }
     $defaults = [
         'site_name' => 'Tea & Toast NAS Player',
         'accent_colour' => '#8b5cf6',
@@ -371,7 +385,22 @@ function tt_is_admin(array $user): bool
     return in_array($user['role'] ?? '', ['admin', 'super_admin'], true);
 }
 
+function tt_authelia_identity(): ?array
+{
+    $email = trim((string) ($_SERVER['HTTP_REMOTE_EMAIL'] ?? $_SERVER['REMOTE_EMAIL'] ?? ''));
+    $username = trim((string) ($_SERVER['HTTP_REMOTE_USER'] ?? $_SERVER['REMOTE_USER'] ?? ''));
+    $name = trim((string) ($_SERVER['HTTP_REMOTE_NAME'] ?? $_SERVER['REMOTE_NAME'] ?? ''));
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL) || $username === '') {
+        return null;
+    }
+    return ['email' => strtolower($email), 'name' => $name !== '' ? $name : $username];
+}
 function tt_h(string $value): string
 {
     return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
+
+
+
+
+

@@ -6,8 +6,21 @@ require __DIR__ . '/config/bootstrap.php';
 $error = '';
 $notice = '';
 $currentUser = null;
+
+if (tt_setting($db, 'registration_enabled', '0') === '1' && ($identity = tt_authelia_identity())) {
+    $stmt = $db->prepare('SELECT id FROM users WHERE email = ?');
+    $stmt->execute([$identity['email']]);
+    $linkedId = $stmt->fetchColumn();
+    if ($linkedId === false) {
+        $stmt = $db->prepare("INSERT INTO users (display_name, email, password_hash, role, auth_source) VALUES (?, ?, ?, 'user', 'authelia')");
+        $stmt->execute([$identity['name'], $identity['email'], password_hash(bin2hex(random_bytes(32)), PASSWORD_DEFAULT)]);
+        $linkedId = (int) $db->lastInsertId();
+    }
+    $_SESSION['user_id'] = (int) $linkedId;
+}
+
 if (!empty($_SESSION['user_id'])) {
-    $stmt = $db->prepare('SELECT id, display_name, email, role, active FROM users WHERE id = ?');
+    $stmt = $db->prepare('SELECT id, display_name, email, role, active, must_change_password, auth_source, avatar_url FROM users WHERE id = ?');
     $stmt->execute([(int) $_SESSION['user_id']]);
     $currentUser = $stmt->fetch() ?: null;
     if (!$currentUser || !(int) $currentUser['active']) {
@@ -27,7 +40,7 @@ try {
         }
         session_regenerate_id(true);
         $_SESSION['user_id'] = (int) $candidate['id'];
-        header('Location: ./');
+        header('Location: ' . (!empty($candidate['must_change_password']) ? '?profile=1&force_password=1' : './'));
         exit;
     }
 
@@ -42,7 +55,7 @@ try {
         if ($name === '' || !$email || strlen($password) < 8) {
             throw new RuntimeException('Enter a name, a valid email address, and a password of at least 8 characters.');
         }
-        $stmt = $db->prepare("INSERT INTO users (display_name, email, password_hash, role) VALUES (?, ?, ?, 'user')");
+        $stmt = $db->prepare("INSERT INTO users (display_name, email, password_hash, role, auth_source) VALUES (?, ?, ?, 'user', 'registration')");
         $stmt->execute([$name, $email, password_hash($password, PASSWORD_DEFAULT)]);
         $notice = 'Your account has been created. You can now sign in.';
     }
@@ -64,6 +77,11 @@ if (!$currentUser) {
     $siteName = tt_setting($db, 'site_name', 'Tea & Toast NAS Player');
     $accent = tt_setting($db, 'accent_colour', '#8b5cf6');
     require __DIR__ . '/views/login.php';
+    exit;
+}
+
+if (isset($_GET['profile'])) {
+    require __DIR__ . '/views/profile.php';
     exit;
 }
 
