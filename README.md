@@ -34,3 +34,9 @@ The interface treats the first folder below a library as the album artist and th
 ## Current scope
 
 This clean build includes the player, installer, focused administrator page and manifest-based updater. Playlists, embedded-tag reading and a global indexed catalogue remain intentionally outside the current lightweight scope.
+
+
+## Releasing updates
+
+See [UPDATER-RELEASE-GUIDE.md](UPDATER-RELEASE-GUIDE.md) before publishing a GitHub release.
+

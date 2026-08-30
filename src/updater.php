@@ -109,7 +109,7 @@ function tt_update_validate_manifest(mixed $manifest, ?string $expectedRepositor
         throw new RuntimeException('The release manifest belongs to a different GitHub repository.');
     }
     if ($expectedRef !== null && (string) ($manifest['ref'] ?? '') !== $expectedRef) {
-        throw new RuntimeException('The release manifest does not match the published release tag.');
+        throw new RuntimeException("The release manifest does not match the published release tag. Expected ref '{$expectedRef}', received '" . (string) ($manifest['ref'] ?? '') . "'.");
     }
     $validatedFiles = [];
     foreach ($manifest['files'] as $path => $metadata) {
@@ -461,3 +461,4 @@ function tt_update_apply(string $appRoot, string $dataRoot, string $repository):
         throw $exception;
     }
 }
+
