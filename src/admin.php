@@ -11,7 +11,22 @@ try {
         if ($action === 'add_library') {
             $name = trim((string) ($_POST['name'] ?? '')); $root = trim((string) ($_POST['root_path'] ?? '')); $real = realpath($root);
             if ($name === '' || $real === false || !is_dir($real) || !is_readable($real)) throw new RuntimeException('Enter a library name and an absolute folder path PHP can read.');
-            $stmt = $db->prepare('INSERT INTO libraries (name, root_path) VALUES (?, ?)'); $stmt->execute([$name, $real]); $notice = 'Library added.';
+            $sortOrder = (int) $db->query('SELECT COALESCE(MAX(sort_order), -1) + 1 FROM libraries')->fetchColumn();
+            $stmt = $db->prepare('INSERT INTO libraries (name, root_path, sort_order) VALUES (?, ?, ?)'); $stmt->execute([$name, $real, $sortOrder]); $notice = 'Library added.';
+        } elseif ($action === 'edit_library') {
+            $id = (int) ($_POST['id'] ?? 0); $name = trim((string) ($_POST['name'] ?? '')); $root = trim((string) ($_POST['root_path'] ?? '')); $real = realpath($root);
+            if ($id < 1 || $name === '' || $real === false || !is_dir($real) || !is_readable($real)) throw new RuntimeException('Enter a library name and an absolute folder path PHP can read.');
+            $stmt = $db->prepare('UPDATE libraries SET name = ?, root_path = ? WHERE id = ?'); $stmt->execute([$name, $real, $id]); $notice = 'Library updated.';
+        } elseif ($action === 'delete_library') {
+            $id = (int) ($_POST['id'] ?? 0); if ($id < 1) throw new RuntimeException('Library not found.');
+            $stmt = $db->prepare('DELETE FROM libraries WHERE id = ?'); $stmt->execute([$id]); $notice = 'Library deleted.';
+        } elseif ($action === 'reorder_libraries') {
+            $ids = array_values(array_filter(array_map('intval', (array) ($_POST['library_ids'] ?? [])), static fn(int $id): bool => $id > 0));
+            $known = array_map('intval', $db->query('SELECT id FROM libraries')->fetchAll(PDO::FETCH_COLUMN)); $check = $ids; sort($known); sort($check);
+            if ($check !== $known) throw new RuntimeException('The library order was not valid. Refresh and try again.');
+            $db->beginTransaction(); $stmt = $db->prepare('UPDATE libraries SET sort_order = ? WHERE id = ?');
+            foreach ($ids as $position => $id) $stmt->execute([$position, $id]);
+            $db->commit(); $notice = 'Library order saved.';
         } elseif ($action === 'toggle_library') {
             $stmt = $db->prepare('UPDATE libraries SET enabled = CASE enabled WHEN 1 THEN 0 ELSE 1 END WHERE id = ?'); $stmt->execute([(int) ($_POST['id'] ?? 0)]); $notice = 'Library status changed.';
         } elseif ($action === 'create_user') {
@@ -41,7 +56,7 @@ try {
         }
     }
 } catch (Throwable $exception) { $error = $exception instanceof PDOException && str_contains(strtolower($exception->getMessage()), 'unique') ? 'That email address or library path already exists.' : $exception->getMessage(); }
-$libraries = $db->query('SELECT * FROM libraries ORDER BY name COLLATE NOCASE')->fetchAll();
+$libraries = $db->query('SELECT * FROM libraries ORDER BY sort_order, name COLLATE NOCASE')->fetchAll();
 $users = $db->query('SELECT id, display_name, email, role, active, created_at FROM users ORDER BY display_name COLLATE NOCASE')->fetchAll();
 $siteName = tt_setting($db, 'site_name', 'Tea & Toast NAS Player'); $accent = tt_setting($db, 'accent_colour', '#8b5cf6'); $registrationEnabled = tt_setting($db, 'registration_enabled', '0') === '1';
 $releaseInfo = tt_update_release_config(dirname(__DIR__)); $updateRepository = tt_setting($db, 'update_repository', (string) $releaseInfo['repository']); $updateState = null; $updateStateError = '';

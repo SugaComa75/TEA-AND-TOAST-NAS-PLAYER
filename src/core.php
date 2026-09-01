@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS libraries (
     name TEXT NOT NULL,
     root_path TEXT NOT NULL UNIQUE,
     enabled INTEGER NOT NULL DEFAULT 1,
+    sort_order INTEGER NOT NULL DEFAULT 0,
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 CREATE TABLE IF NOT EXISTS settings (
@@ -74,6 +75,11 @@ CREATE TABLE IF NOT EXISTS playlist_tracks (
 );
 SQL);
     $columns = array_column($db->query('PRAGMA table_info(users)')->fetchAll(), 'name');
+    $libraryColumns = array_column($db->query('PRAGMA table_info(libraries)')->fetchAll(), 'name');
+    if (!in_array('sort_order', $libraryColumns, true)) {
+        $db->exec('ALTER TABLE libraries ADD COLUMN sort_order INTEGER NOT NULL DEFAULT 0');
+        $db->exec('UPDATE libraries SET sort_order = id');
+    }
     $migrations = [
         'must_change_password' => 'ALTER TABLE users ADD COLUMN must_change_password INTEGER NOT NULL DEFAULT 0',
         'auth_source' => "ALTER TABLE users ADD COLUMN auth_source TEXT NOT NULL DEFAULT 'local'",

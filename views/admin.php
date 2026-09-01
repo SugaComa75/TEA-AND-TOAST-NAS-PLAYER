@@ -10,6 +10,12 @@
         :root {
             --accent: <?= tt_h($accent) ?>
         }
+        .library-editor .table-row { cursor: grab }
+        .library-editor .table-row.dragging { opacity: .45 }
+        .library-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end }
+        .library-edit { display: grid; grid-template-columns: 1fr 2fr auto; gap: 10px; align-items: end; padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: #0b0c0f }
+        .library-edit[hidden] { display: none }
+        .library-order-note { margin: 12px 0 0 }
     </style>
 </head>
 
@@ -25,26 +31,27 @@
     </header>
     <main class="admin-grid">
         <?php if ($error): ?>
-            <div class="alert error wide"><?= tt_h($error) ?></div><?php endif; ?><?php if ($notice && !$updateResult): ?>
-            <div class="alert success wide"><?= tt_h($notice) ?></div><?php endif; ?>
+            <div class="alert error wide"><?= tt_h($error) ?></div><?php endif; ?>
         <section class="card wide" id="admin-libraries" tabindex="-1">
             <h2>Libraries</h2>
-            <p class="muted">Each path is read directly. Nothing here creates a music catalogue.</p>
-            <div class="table"><?php foreach ($libraries as $library): ?>
-                    <div class="table-row">
+            <p class="muted">Each path is read directly. Drag libraries to set their order in the player.</p>
+            <div class="table library-editor" id="library-list"><?php foreach ($libraries as $library): ?>
+                    <div class="table-row" draggable="true" data-library-id="<?= (int) $library['id'] ?>">
                         <div><strong><?= tt_h($library['name']) ?></strong><small><?= tt_h($library['root_path']) ?></small>
                         </div>
-                        <form method="post"><input type="hidden" name="csrf" value="<?= tt_h(tt_csrf_token()) ?>"><input
-                                type="hidden" name="action" value="toggle_library"><input type="hidden" name="id"
-                                value="<?= (int) $library['id'] ?>"><button
-                                class="button small"><?= (int) $library['enabled'] ? 'Disable' : 'Enable' ?></button></form>
-                    </div><?php endforeach; ?>
+                        <div class="library-actions"><button type="button" class="button small" data-edit-library="<?= (int) $library['id'] ?>">Edit</button><form method="post" onsubmit="return confirm('Delete this library? Its favourites and playlist references will also be removed.');"><input type="hidden" name="csrf" value="<?= tt_h(tt_csrf_token()) ?>"><input type="hidden" name="action" value="delete_library"><input type="hidden" name="id" value="<?= (int) $library['id'] ?>"><button class="button small danger">Delete</button></form></div>
+                    </div>
+                    <form method="post" class="library-edit" id="edit-library-<?= (int) $library['id'] ?>" hidden><input type="hidden" name="csrf" value="<?= tt_h(tt_csrf_token()) ?>"><input type="hidden" name="action" value="edit_library"><input type="hidden" name="id" value="<?= (int) $library['id'] ?>"><label>Library name<input name="name" value="<?= tt_h($library['name']) ?>" required></label><label>Absolute NAS path<input name="root_path" value="<?= tt_h($library['root_path']) ?>" required></label><div class="library-actions"><button type="button" class="button small" data-cancel-edit>Cancel</button><button class="button small primary">Save</button></div></form>
+                    <?php endforeach; ?>
             </div>
+            <p class="muted library-order-note">Drop rows into the order you want, then save when you are ready.</p>
             <form method="post" class="inline-form"><input type="hidden" name="csrf"
                     value="<?= tt_h(tt_csrf_token()) ?>"><input type="hidden" name="action"
                     value="add_library"><label>Library name<input name="name" required></label><label>Absolute NAS
                     path<input name="root_path" placeholder="/volume1/Music" required></label><button
                     class="button primary">Add library</button></form>
+            <form method="post" id="reorder-libraries-form"><input type="hidden" name="csrf" value="<?= tt_h(tt_csrf_token()) ?>"><input type="hidden" name="action" value="reorder_libraries"><div id="library-order-fields"></div><button type="submit" class="button">Save order</button></form>
+            <?php if ($notice && !$updateResult): ?><div class="alert success"><?= tt_h($notice) ?></div><?php endif; ?>
         </section>
         <section class="card" id="admin-users" tabindex="-1">
             <h2>Users</h2>
@@ -137,7 +144,7 @@
                     <?php endif; ?>    <?php endif; ?>
             </section><?php endif; ?>
     </main>
-    <script>(() => { const returnFocus = <?= json_encode($returnFocus, JSON_UNESCAPED_SLASHES) ?>; document.querySelectorAll('.admin-grid form').forEach(form => form.addEventListener('submit', () => { const section = form.closest('.card[id]'); if (!section) return; let input = form.querySelector('input[name="return_focus"]'); if (!input) { input = document.createElement('input'); input.type = 'hidden'; input.name = 'return_focus'; form.append(input) } input.value = section.id })); if (returnFocus) { requestAnimationFrame(() => requestAnimationFrame(() => { const section = document.getElementById(returnFocus); if (!section) return; section.scrollIntoView({ block: 'start' }); section.focus({ preventScroll: true }) })) } })();</script>
+    <script>(() => { const returnFocus = <?= json_encode($returnFocus, JSON_UNESCAPED_SLASHES) ?>; const list = document.getElementById('library-list'); const orderForm = document.getElementById('reorder-libraries-form'); const fields = document.getElementById('library-order-fields'); const collectOrder = () => { fields.innerHTML = ''; list.querySelectorAll('.table-row[data-library-id]').forEach(row => { const input = document.createElement('input'); input.type = 'hidden'; input.name = 'library_ids[]'; input.value = row.dataset.libraryId; fields.append(input) }) }; let dragged = null; list?.addEventListener('dragstart', event => { dragged = event.target.closest('.table-row[data-library-id]'); dragged?.classList.add('dragging') }); list?.addEventListener('dragend', () => { dragged?.classList.remove('dragging'); dragged = null }); list?.addEventListener('dragover', event => { event.preventDefault(); const target = event.target.closest('.table-row[data-library-id]'); if (!dragged || !target || target === dragged) return; const box = target.getBoundingClientRect(); list.insertBefore(dragged, event.clientY < box.top + box.height / 2 ? target : target.nextSibling) }); orderForm?.addEventListener('submit', collectOrder); document.querySelectorAll('[data-edit-library]').forEach(button => button.addEventListener('click', () => { document.getElementById('edit-library-' + button.dataset.editLibrary).hidden = false })); document.querySelectorAll('[data-cancel-edit]').forEach(button => button.addEventListener('click', () => { button.closest('form').hidden = true })); document.querySelectorAll('.admin-grid form').forEach(form => form.addEventListener('submit', () => { const section = form.closest('.card[id]'); if (!section) return; let input = form.querySelector('input[name="return_focus"]'); if (!input) { input = document.createElement('input'); input.type = 'hidden'; input.name = 'return_focus'; form.append(input) } input.value = section.id })); if (returnFocus) { requestAnimationFrame(() => requestAnimationFrame(() => { const section = document.getElementById(returnFocus); if (!section) return; section.scrollIntoView({ block: 'start' }); section.focus({ preventScroll: true }) })) } })();</script>
 </body>
 
 </html>

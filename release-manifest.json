@@ -1,9 +1,9 @@
 {
     "schema": 1,
-    "version": "0.3.2",
-    "ref": "0.3.2",
+    "version": "0.3.4",
+    "ref": "0.3.4",
     "repository": "SugaComa75/Tea-and-Toast-NAS-Player",
-    "generated_at": "2026-08-30T09:20:03+00:00",
+    "generated_at": "2026-09-01T02:28:56+00:00",
     "files": {
         ".htaccess": {
             "sha256": "72c15c03c6bcc8462fd36a881aad3b71542377c512c2597af6176fe8f3af340e",
@@ -18,8 +18,8 @@
             "size": 535
         },
         "assets/app.css": {
-            "sha256": "15fedbce78054f9350e8e44ef180a607efec3f2172a789629cfb46ca51c41e3c",
-            "size": 16961
+            "sha256": "7a9071a24e04cf813a1dd5cbf26e4711730c0fc0a67a517079a5608129420893",
+            "size": 17050
         },
         "assets/app.js": {
             "sha256": "474adb12c4ee44782b581366e847329ba8eb3aa42ff8207e1755d5cb44cdd656",
@@ -30,32 +30,32 @@
             "size": 809
         },
         "config/release.php": {
-            "sha256": "df2ffd3f147f31f410739626e5cd54042a6d69be37b775ff82f1261e2c4cab6b",
-            "size": 196
+            "sha256": "b3c0cd64ecaec6b31ce47b304300878295f3b79631d6f5da5e52414217e87798",
+            "size": 195
         },
         "index.php": {
-            "sha256": "360d0ddd1baf84b096c0f0b2c173892816f88cd34dfb1fce70aeda0706ff27a8",
-            "size": 4211
+            "sha256": "f9382baf8a3783b069d53df77f2c15703c5c7d924ee505ce48afd1fe33406bc6",
+            "size": 4223
         },
         "src/admin.php": {
-            "sha256": "cde016e5237fd50d5e96a3bdeb074b1f730727757f2365ca12816ba976ca47b0",
-            "size": 6028
+            "sha256": "f25f573f42a795f5a7f536a8c16597e8c8ccd38c4a49b9d0659645139d619564",
+            "size": 7767
         },
         "src/api.php": {
             "sha256": "1f89eb86f51c2d5800548c90e97b58b68e30b42eea68e3b2743add03e8db6628",
             "size": 3400
         },
         "src/core.php": {
-            "sha256": "9d48d9708c1b171bdfe7c0211619b56ad9ce9fc9750abee7c3881a34f227bdc5",
-            "size": 14927
+            "sha256": "410734cdcd48d8b972451b8142133f00bbfe264fa6d27805bf995511204b1fec",
+            "size": 15286
         },
         "src/updater.php": {
             "sha256": "98b50025cca99c05f8fa744e56195d9d23fc160b803caaecc878b2f505a9b31e",
             "size": 19907
         },
         "views/admin.php": {
-            "sha256": "97d4b2627af9fc51b3b374c778ff54fc2fc90980f1d33ede13e6f97dae1dcac3",
-            "size": 10816
+            "sha256": "512b6263e7b9e5e3346eb193fb042465b6d307c723143d496c5903ecefa4f054",
+            "size": 14295
         },
         "views/login.php": {
             "sha256": "1ee2d872bb39c222096f151cc2f09aeb6e2f6029179aeebf6ce49aa566a5e58a",

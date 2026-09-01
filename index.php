@@ -98,7 +98,7 @@ if (isset($_GET['admin'])) {
     exit;
 }
 
-$libraries = $db->query('SELECT id, name FROM libraries WHERE enabled = 1 ORDER BY name COLLATE NOCASE')->fetchAll();
+$libraries = $db->query('SELECT id, name FROM libraries WHERE enabled = 1 ORDER BY sort_order, name COLLATE NOCASE')->fetchAll();
 $siteName = tt_setting($db, 'site_name', 'Tea & Toast NAS Player');
 $accent = tt_setting($db, 'accent_colour', '#8b5cf6');
 require __DIR__ . '/views/player.php';
